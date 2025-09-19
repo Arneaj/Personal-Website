@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Starboard</title>
+    <!-- Add Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background: #2a2a2a;
+            overflow: hidden;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        #stars_canvas {
+            width: 100%;
+            height: 100%;
+            background-color: #da6052;
+            image-rendering: crisp-edges;
+        }
+        #error-box {
+            color: #fd8080;
+            font-weight: 500;
+            font-size: 18pt;
+            border: 1px solid white;
+            padding: 25px;
+        }
+        #info {
+            position: absolute;
+            opacity: 0;
+            padding: 1%;
+            border-radius: 10px;
+            color: #ffffff;
+            background-color: rgba(26, 26, 26, 0.8);
+        }
+        @keyframes smooth-appear {
+            from { opacity: 0; } to { opacity: 1; }
+        }
+        @keyframes smooth-disappear {
+            from { opacity: 1; } to { opacity: 0; }
+        }
+        .button {
+            background-color: #333333;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .button:hover {
+            background-color: #444444;
+        }
+        @keyframes fadeOut {
+            from { opacity: 1;  }
+            to { opacity: 0; }
+        }
+
+        #error-message-box {
+            animation: fadeOut 1s ease-out 3s forwards;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="stars_canvas"></canvas>
+
+    <!-- Star info / Add star popup -->
+    <div id="info"></div>
+
+    <div id="error-box">
+        <span class="error-box-title">Error messages, if any, go here.</span>
+    </div>
+
+    <script type="module">
+        import {
+            starsGraphics, clickFunction,
+            mouseDown
+        } from "./canvas.js";
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            // Initialize WebGL + SSE
+            try {
+                starsGraphics();
+            } catch (e) {
+                const errorBoxDiv = document.getElementById("error-box");
+                const errorSpan = document.createElement("p");
+                errorSpan.innerText = `Uncaught JS exception: ${e}`;
+                errorBoxDiv.appendChild(errorSpan);
+                console.error(e);
+            }
+
+            // Attach events to the canvas
+            const canvas = document.getElementById("stars_canvas");
+            if (canvas) {
+                canvas.addEventListener("click", clickFunction);
+
+                // If you want drag/pan with mousedown, you can do something like:
+                canvas.addEventListener("mousedown", mouseDown);
+            }
+        });
+    </script>
+
+</body>
+</html>
