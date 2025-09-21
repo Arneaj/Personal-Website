@@ -1,7 +1,7 @@
 // globals.js
 
-export let starIDs = [];        // starIDs[i] => star's integer ID
-export let starPositions = [];  // starPositions[2*i], starPositions[2*i + 1] => star's X & Y
+export let starIDs = [1, 2, 3];        // starIDs[i] => star's integer ID
+export let starPositions = [50,500, 30,50, 20,200];  // starPositions[2*i], starPositions[2*i + 1] => star's X & Y
 export let starMessages = [];   // starMessages[i] => string or null
 // export let starLastLikeTime = [
 //     Date.now() * 0.001 - 1735689600 - 10,  // some star added 10s ago
@@ -15,9 +15,9 @@ export let starMessages = [];   // starMessages[i] => string or null
 // ];  // starCreationTime[i] => star's UNIX time of last like or creation.
 // // TEMPORARY initialising the stars with fixed values, only 6 for now
 export let starLastLikeTime = [];
-export let starUserID = [];
+export let starUserID = [1, 1, 2];
 // export const starUserID = [0, 1, 0, 1, 1, 2, 0, 1];
-export let nb_stars = 0;
+export let nb_stars = 3;
 export let starCreationDate = [];
 export let starUsername = [];
 
@@ -26,8 +26,8 @@ export let starLastLikeCPUBuffer = new Float32Array(starLastLikeTime);
 export let starUserIDCPUBuffer = new Int32Array(starUserID);
 
 
-export let x_min = 5000;
-export let y_min = 5000;
+export let x_min = 0;
+export let y_min = 0;
 
 export let zoom = 1.0;
 

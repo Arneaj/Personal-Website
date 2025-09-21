@@ -6,7 +6,6 @@
 
 import {
     starPositions,
-    starUsername,
     nb_stars,
     starPositionsCPUBuffer,
     starLastLikeCPUBuffer,
@@ -73,10 +72,9 @@ export async function starsGraphics() {
 
     uniform int nb_stars;
     uniform vec2 star_positions[400];
-    uniform float star_last_likes[200];
+    // uniform float star_last_likes[200];
     uniform int star_user_ids[200];
 
-    uniform float current_time;
     uniform float smooth_current_time;
     uniform vec2 cursor_position;
 
@@ -118,16 +116,9 @@ export async function starsGraphics() {
                 closest_star_user_id = star_user_ids[i];
             }
 
-            delta_time = current_time - star_last_likes[i];
-            time_falloff = clamp(1.0-delta_time*0.00001157407, 0.0, 1.0);  // disappears over 24h
-
             outputColor.xyz += (1.0 + 0.1 * sin(mod(10.0 * smooth_current_time, 6.28318530718)))
-                           * ( 
-                                vec3(1.0, 0.8, 0.6) * time_falloff + 
-                                vec3(1.0, 0.9, 1.0) * (1.0-time_falloff) 
-                             )
-                           * time_falloff
-                           / pow(d * 0.0005, 1.8);
+                            *  vec3(1.0, 0.8, 0.6) // 
+                            /  pow(d * 0.0005, 1.8);
         }
 
         float d_from_cursor = max(1000.0, 1000.0 * distance(uv_cursor_position, uv_position));
@@ -227,10 +218,10 @@ export async function starsGraphics() {
 
     // Uniform locations
     const starUniform = gl.getUniformLocation(program, "star_positions");
-    const starLastLikeUniform = gl.getUniformLocation(program, "star_last_likes");
+    // const starLastLikeUniform = gl.getUniformLocation(program, "star_last_likes");
     const starUserIDUniform = gl.getUniformLocation(program, "star_user_ids");
 
-    const timeUniform = gl.getUniformLocation(program, "current_time");
+    // const timeUniform = gl.getUniformLocation(program, "current_time");
     const smoothTimeUniform = gl.getUniformLocation(program, "smooth_current_time");
 
     const starCountUniform = gl.getUniformLocation(program, "nb_stars");
@@ -289,14 +280,14 @@ export async function starsGraphics() {
             cursorY*zoom + (y_min + 0.5 * canvas.clientHeight * (1 - zoom))
         );
 
-        gl.uniform1f(timeUniform, Date.now() * 0.001 - 1735689600.0);  // seconds since 01/01/2025
+        // gl.uniform1f(timeUniform, Date.now() * 0.001 - 1735689600.0);  // seconds since 01/01/2025
         gl.uniform1f(smoothTimeUniform, smooth_time);  // seconds since program started. Used for smooth animations.
 
         gl.uniform1i(starCountUniform, nb_stars);
         
         if (nb_stars > 0) {
             gl.uniform2fv(starUniform, starPositionsCPUBuffer);
-            gl.uniform1fv(starLastLikeUniform, starLastLikeCPUBuffer);
+            // gl.uniform1fv(starLastLikeUniform, starLastLikeCPUBuffer);
             gl.uniform1iv(starUserIDUniform, starUserIDCPUBuffer);
         }
 
@@ -330,11 +321,6 @@ var mouseDownDone = false;
 // });
 
 export function mouseDown() {
-    if (starPopupOpen) return;
-    
-    mouseHoldTimeout = setTimeout(() => {
-        mouseDownDone = true;
-    }, 500);
 }
 
 var last_x = null;
@@ -342,32 +328,7 @@ var last_y = null;
 var last_t = null;
 
 export function mouseDownAndMove(event) {
-    if (starPopupOpen) return;
-    if (!mouseDownDone && !mouseHoldTimeout) return;
-
-    const canvas = document.getElementById('stars_canvas');
-
-    let x = event.clientX;
-    let y = event.clientY;
-    let t = Date.now();
-
-    if (last_x === null || last_y === null || last_t === null) {
-        last_x = x;
-        last_y = y;
-        last_t = t;
-        return;
-    }
-
-    let dx = x - last_x;
-    let dy = y - last_y;
-    // let dt = Math.max(0.001, t - last_t);
-
-    last_x = x;
-    last_y = y;
-    last_t = t;
-
-    speed_x += 0.5 * Math.sign(dx) * Math.min(0.1, Math.abs(dx)); // Math.sign(dx/dt) * Math.min(0.1, Math.abs(dx/dt));
-    speed_y += 0.5 * Math.sign(dy) * Math.min(0.1, Math.abs(dy)); // Math.sign(dy/dt) * Math.min(0.1, Math.abs(dy/dt));
+    
 }
 
 export function stopOnMouseLeave(event) {
@@ -395,8 +356,6 @@ export function clickFunction(event) {
         last_t = null;
         return;
     }
-    if (starPopupOpen) return;
-    starPopupOpen = true;
 
     const infoBox = document.getElementById('info');
     if (!infoBox) return;
@@ -410,10 +369,6 @@ export function clickFunction(event) {
     infoBox.style.animation = "0.2s smooth-disappear ease-out";
     infoBox.style.opacity = "0";
 
-    // Show the "Add star" form
-    last_clicked_x = x;
-    last_clicked_y = y;
-
     if (infoBox.style.visibility === "hidden") 
     {
         infoBox.innerHTML = `
@@ -425,7 +380,7 @@ export function clickFunction(event) {
             <button id="close_star_box" class="button close_button">Close</button>
         `;
         const submitBtn = infoBox.querySelector("#submit_button");
-        submitBtn?.addEventListener("click", submitMessage);
+        // submitBtn?.addEventListener("click", submitMessage);
     }
     else 
     {
@@ -435,10 +390,10 @@ export function clickFunction(event) {
             <button id="dislike_button" class="button dislike_button">Dislike</button>
             <button id="close_star_box" class="button close_button">Close</button>
         `;
-        const likeBtn = infoBox.querySelector("#like_button");
-        likeBtn?.addEventListener("click", likeMessage);
-        const dislikeBtn = infoBox.querySelector("#dislike_button");
-        dislikeBtn?.addEventListener("click", dislikeMessage);
+        // const likeBtn = infoBox.querySelector("#like_button");
+        // likeBtn?.addEventListener("click", likeMessage);
+        // const dislikeBtn = infoBox.querySelector("#dislike_button");
+        // dislikeBtn?.addEventListener("click", dislikeMessage);
     }
     infoBox.style.visibility = "visible";
     infoBox.style.animation = "0.2s smooth-appear ease-in";
@@ -449,10 +404,10 @@ export function clickFunction(event) {
     infoBox.style.width = "50%";
 
     // Attach listeners to the close buttons
-    const closeBtn = infoBox.querySelector("#close_star_box");
-    closeBtn?.addEventListener("click", async () => {
-        await closeStarPopup(event);
-    });
+    // const closeBtn = infoBox.querySelector("#close_star_box");
+    // closeBtn?.addEventListener("click", async () => {
+    //     await closeStarPopup(event);
+    // });
 }
 
 
