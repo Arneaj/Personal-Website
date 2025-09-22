@@ -1,7 +1,7 @@
 // globals.js
 
 export let starIDs = [1, 2, 3];        // starIDs[i] => star's integer ID
-export let starPositions = [50,500, 30,50, 20,200];  // starPositions[2*i], starPositions[2*i + 1] => star's X & Y
+export let starPositions = [800,500, 100,300, 260,200];  // starPositions[2*i], starPositions[2*i + 1] => star's X & Y
 export let starMessages = [];   // starMessages[i] => string or null
 // export let starLastLikeTime = [
 //     Date.now() * 0.001 - 1735689600 - 10,  // some star added 10s ago
